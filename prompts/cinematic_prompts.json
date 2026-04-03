@@ -1,0 +1,18 @@
+[
+  {"prompt": "Un samouraï solitaire sous la pluie torrentielle, ralenti, lumière dramatique, profondeur de champ, film grain 4K", "style": "cinematic"},
+  {"prompt": "Cité cyberpunk de nuit, voitures volantes, néon dans la pluie, ultra réaliste, 8K HDR", "style": "cyberpunk"},
+  {"prompt": "Dragon épique survolant des montagnes enneigées, heure dorée, ailes déployées, cinématique 8K", "style": "fantasy"},
+  {"prompt": "Astronaute flottant dans l'espace profond, nébuleuse colorée, terre en arrière-plan, photorealistic", "style": "scifi"},
+  {"prompt": "Guerriers spartiates en bataille épique, feu et fumée, ralenti, ciel dramatique orageux", "style": "epic_battle"},
+  {"prompt": "Forêt enchantée bioluminescente la nuit, créatures féeriques, brume bleue, magie", "style": "fantasy"},
+  {"prompt": "Détective dans New York des années 40, pluie, ombres expressionnistes, grain cinématique", "style": "noir"},
+  {"prompt": "Rue de Tokyo sous la pluie de nuit, reflets néon, parapluies, couleurs riches", "style": "cyberpunk"},
+  {"prompt": "Cascade monumentale dans une forêt tropicale, lumière filtrée, brume, ultra détaillé", "style": "nature"},
+  {"prompt": "Bâtiment victorien abandonné, lune pleine, brouillard, corbeaux, ombres dramatiques", "style": "horror"},
+  {"prompt": "Station spatiale futuriste, corridor métallique, zero-gravité, technologie avancée", "style": "scifi"},
+  {"prompt": "Coucher de soleil sur la mer Méditerranée, reflets d'or, vagues douces, romantique", "style": "romantique"},
+  {"prompt": "Chevalier médiéval face à un château en flammes, armure brillante, orage, épique", "style": "epic_battle"},
+  {"prompt": "Marchés nocturnes de Marrakech, lanternes, épices, couleurs vives, cinématique", "style": "cinematic"},
+  {"prompt": "Sous-marin futuriste explorant les abysses, créatures bioluminescentes, pression", "style": "scifi"},
+  {"prompt": "Vieux Paris sous la pluie d'automne, cafés éclairés, pavés brillants, nostalgie", "style": "noir"}
+]

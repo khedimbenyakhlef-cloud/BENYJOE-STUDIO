@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🎬 BENY-JOE CINÉ IA PRO v8.0</title>
+<style>
+:root {
+  --bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--border:#2a2a40;
+  --accent:#7c5cbf;--accent2:#5b8dee;--gold:#e8b84b;--red:#e84b6e;
+  --green:#4be8a0;--text:#e8e8f0;--muted:#8888aa;--radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.header{background:linear-gradient(135deg,#0f0f1e,#1a1030,#0f1825);border-bottom:1px solid var(--border);padding:20px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-icon{font-size:32px;filter:drop-shadow(0 0 12px #7c5cbf80)}
+.logo-text h1{font-size:20px;font-weight:700;background:linear-gradient(90deg,#a07cf0,#5b8dee,#e8b84b);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.logo-text p{font-size:11px;color:var(--muted);margin-top:2px}
+.header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+/* GPU STATUS BADGE */
+.gpu-badge{display:flex;align-items:center;gap:7px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;transition:.2s}
+.gpu-badge:hover{border-color:var(--accent)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.dot.online{background:var(--green);box-shadow:0 0 8px var(--green)}
+.dot.busy{background:var(--gold);box-shadow:0 0 8px var(--gold);animation:pulse 1s infinite}
+.dot.offline{background:var(--red)}
+.dot.cpu{background:#ff9900;box-shadow:0 0 8px #ff9900}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* GPU DETAIL PANEL */
+.gpu-detail-panel{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:20px;display:none}
+.gpu-detail-panel.show{display:block}
+.gpu-detail-title{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.gpu-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.gpu-info-item{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;font-size:12px}
+.gpu-info-item .label{color:var(--muted);font-size:10px;margin-bottom:4px}
+.gpu-info-item .value{color:var(--text);font-weight:600}
+.gpu-info-item .value.online{color:var(--green)}
+.gpu-info-item .value.offline{color:var(--red)}
+.gpu-info-item .value.cpu{color:#ff9900}
+.gpu-url-row{display:flex;gap:8px;margin-top:8px}
+.gpu-url-row input{flex:1;font-size:12px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);outline:none}
+.gpu-url-row input:focus{border-color:var(--accent)}
+.gpu-url-row button{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer;white-space:nowrap}
+/* CONSOLE */
+.console-panel{background:#050510;border:1px solid #1a1a40;border-radius:var(--radius);margin-bottom:20px;overflow:hidden;display:none}
+.console-panel.show{display:block}
+.console-header{background:#0d0d20;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a40}
+.console-header span{font-size:12px;color:#5b8dee;font-family:monospace;font-weight:600}
+.console-header-right{display:flex;gap:8px;align-items:center}
+.console-body{height:220px;overflow-y:auto;padding:10px 14px;font-family:'Courier New',monospace;font-size:11px;line-height:1.6}
+.console-body::-webkit-scrollbar{width:4px}
+.console-body::-webkit-scrollbar-track{background:#0a0a18}
+.console-body::-webkit-scrollbar-thumb{background:#2a2a50;border-radius:2px}
+.log-line{margin-bottom:2px;word-break:break-all}
+.log-info{color:#5b8dee}
+.log-ok{color:#4be8a0}
+.log-warn{color:#e8b84b}
+.log-err{color:#e84b6e}
+.log-time{color:#444466;margin-right:8px}
+.log-cpu{color:#ff9900}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:360px 1fr;gap:0;min-height:calc(100vh - 80px)}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:24px}
+.main{padding:24px;overflow-y:auto}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px;width:360px;text-align:center}
+.modal h2{font-size:22px;margin-bottom:8px}
+.modal p{color:var(--muted);font-size:13px;margin-bottom:28px}
+.pin-input{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;color:var(--text);font-size:18px;text-align:center;letter-spacing:6px;width:100%;margin-bottom:16px;outline:none;transition:.2s}
+.pin-input:focus{border-color:var(--accent)}
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--bg3);border-radius:var(--radius);padding:4px;margin-bottom:24px}
+.tab{flex:1;padding:10px;text-align:center;border-radius:8px;cursor:pointer;font-size:13px;color:var(--muted);transition:.2s;border:none;background:none;font-family:inherit}
+.tab.active{background:var(--accent);color:#fff;font-weight:600}
+.tab:hover:not(.active){background:var(--bg);color:var(--text)}
+.section{display:none}
+.section.active{display:block}
+/* FORM */
+.label{font-size:12px;color:var(--muted);margin-bottom:6px;display:flex;justify-content:space-between}
+.label span{color:var(--text);font-weight:500}
+.field{margin-bottom:18px}
+textarea,input[type=text],input[type=number],select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:.2s}
+textarea:focus,input:focus,select:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:80px}
+select option{background:var(--bg2)}
+.style-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:18px}
+.style-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 6px;font-size:11px;color:var(--muted);cursor:pointer;text-align:center;transition:.2s;display:flex;flex-direction:column;gap:2px}
+.style-btn:hover{border-color:var(--accent);color:var(--text)}
+.style-btn.active{border-color:var(--accent);background:rgba(124,92,191,.15);color:var(--text);font-weight:600}
+.style-btn .emoji{font-size:18px}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.toggle-row label{font-size:13px;color:var(--text)}
+.toggle{position:relative;width:38px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:20px;cursor:pointer;transition:.2s}
+.toggle-slider:before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked+.toggle-slider{background:var(--accent)}
+.toggle input:checked+.toggle-slider:before{transform:translateX(18px)}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer}
+.separator{border:none;border-top:1px solid var(--border);margin:18px 0}
+/* BUTTONS */
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(124,92,191,.4)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-sm{width:auto;padding:8px 14px;font-size:12px;border-radius:8px;border:none;cursor:pointer;font-family:inherit}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--muted)}
+.btn-ghost:hover{border-color:var(--accent);color:var(--text)}
+.btn-danger{background:rgba(232,75,110,.2);border:1px solid var(--red);color:var(--red)}
+.btn-cpu{background:rgba(255,153,0,.15);border:1px solid #ff9900;color:#ff9900;font-size:11px;padding:5px 10px;border-radius:8px;cursor:pointer}
+/* CPU MODE BANNER */
+.cpu-banner{background:rgba(255,153,0,.1);border:1px solid rgba(255,153,0,.4);border-radius:var(--radius);padding:12px 16px;margin-bottom:16px;display:none;align-items:center;gap:10px;font-size:12px}
+.cpu-banner.show{display:flex}
+.cpu-banner-icon{font-size:20px;flex-shrink:0}
+.cpu-banner-text{color:#ffaa22}
+/* PROGRESS */
+.progress-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.progress-header{display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px}
+.progress-bar-bg{background:var(--bg3);border-radius:20px;height:8px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:20px;transition:width .4s}
+.progress-bar.cpu-mode{background:linear-gradient(90deg,#ff6600,#ff9900)}
+.progress-step{font-size:12px;color:var(--muted);margin-top:8px;text-align:center}
+.progress-frames{font-size:11px;color:var(--muted);margin-top:4px;text-align:center}
+/* SIMULATED PROGRESS */
+.sim-badge{display:inline-block;background:rgba(255,153,0,.2);border:1px solid #ff9900;border-radius:10px;padding:2px 8px;font-size:10px;color:#ff9900;margin-left:8px}
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:.2s}
+.result-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.result-card video,.result-card img{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000;display:block}
+.result-card .card-info{padding:12px}
+.result-card .card-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.result-card .card-meta{font-size:11px;color:var(--muted);margin-bottom:10px}
+.card-actions{display:flex;gap:6px}
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-state .empty-icon{font-size:48px;margin-bottom:16px;opacity:.5}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.pill-done{background:rgba(75,232,160,.15);border:1px solid var(--green);color:var(--green)}
+.pill-error{background:rgba(232,75,110,.15);border:1px solid var(--red);color:var(--red)}
+.pill-proc{background:rgba(232,184,75,.15);border:1px solid var(--gold);color:var(--gold)}
+.pill-queue{background:rgba(91,141,238,.15);border:1px solid var(--accent2);color:var(--accent2)}
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:30px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:18px}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(124,92,191,.06)}
+.upload-zone p{font-size:13px;color:var(--muted);margin-top:8px}
+.upload-preview{width:100%;border-radius:var(--radius);display:none;margin-top:10px}
+/* TOAST */
+.toast-wrap{position:fixed;bottom:24px;right:24px;z-index:2000;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;font-size:13px;max-width:320px;animation:toastIn .25s;box-shadow:var(--shadow)}
+.toast.ok{border-color:var(--green);color:var(--green)}
+.toast.err{border-color:var(--red);color:var(--red)}
+.toast.warn{border-color:var(--gold);color:var(--gold)}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* HISTORY */
+.history-list{display:flex;flex-direction:column;gap:8px}
+.history-item{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:center;gap:12px;font-size:12px}
+.history-item .h-prompt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+.history-item .h-time{color:var(--muted);flex-shrink:0}
+/* PROMPTS */
+.prompts-library{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px}
+.prompt-chip{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:11px;cursor:pointer;transition:.2s;line-height:1.4}
+.prompt-chip:hover{border-color:var(--accent2);background:rgba(91,141,238,.1)}
+/* DIAG BUTTON */
+.diag-btn{background:rgba(91,141,238,.15);border:1px solid var(--accent2);color:var(--accent2);font-size:11px;padding:5px 10px;border-radius:8px;cursor:pointer;border:1px solid var(--accent2)}
+.diag-btn:hover{background:rgba(91,141,238,.3)}
+@media(max-width:900px){.layout{grid-template-columns:1fr}.sidebar{border-right:none;border-bottom:1px solid var(--border)}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div style="font-size:44px;margin-bottom:12px">🎬</div>
+    <h2>BENY-JOE CINÉ IA PRO</h2>
+    <p>v10.0 — Studio IA Professionnel<br/>Entrez votre code PIN pour accéder</p>
+    <input class="pin-input" id="pinInput" type="password" placeholder="•••••••" maxlength="10" autocomplete="off"/>
+    <button class="btn btn-primary" onclick="login()" style="width:100%">🔓 Accéder au Studio</button>
+    <p id="loginError" style="color:var(--red);font-size:12px;margin-top:10px;display:none">❌ Code PIN incorrect</p>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="header" id="mainHeader" style="display:none">
+  <div class="logo">
+    <div class="logo-icon">🎬</div>
+    <div class="logo-text">
+      <h1>BENY-JOE CINÉ IA PRO</h1>
+      <p>Studio Génératif IA — v10.0 | Fondé par KHEDIM BENYAKHLEF</p>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="gpu-badge" id="gpuBadge" onclick="toggleGpuPanel()">
+      <div class="dot" id="gpuDot"></div>
+      <span id="gpuLabel">Vérification GPU...</span>
+    </div>
+    <button class="btn-sm diag-btn" onclick="toggleConsole()">🖥️ Console</button>
+    <button class="btn-sm btn-ghost" onclick="runDiagnostic()">🔍 Diagnostic</button>
+    <button class="btn-sm btn-ghost" onclick="logout()">⎋ Déconnexion</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout" id="mainLayout" style="display:none">
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <!-- GPU DETAIL PANEL -->
+  <div class="gpu-detail-panel" id="gpuDetailPanel">
+    <div class="gpu-detail-title">⚙️ Statut GPU &amp; Configuration</div>
+    <div class="gpu-info-grid">
+      <div class="gpu-info-item"><div class="label">STATUT</div><div class="value" id="gpuInfoStatus">—</div></div>
+      <div class="gpu-info-item"><div class="label">DEVICE</div><div class="value" id="gpuInfoDevice">—</div></div>
+      <div class="gpu-info-item"><div class="label">VRAM</div><div class="value" id="gpuInfoVram">—</div></div>
+      <div class="gpu-info-item"><div class="label">MODE</div><div class="value" id="gpuInfoMode">—</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:6px">🔗 URL GPU Kaggle/Colab</div>
+    <div class="gpu-url-row">
+      <input type="text" id="gpuUrlInput" placeholder="https://xxxx.ngrok-free.app"/>
+      <button onclick="updateGpuUrl()">Mettre à jour</button>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn-sm btn-ghost" onclick="checkGpuStatus()" style="font-size:11px">🔄 Actualiser</button>
+      <button class="btn-sm diag-btn" onclick="runDiagnostic()" style="font-size:11px">🔍 Lancer Diagnostic</button>
+    </div>
+  </div>
+
+  <!-- CPU MODE BANNER -->
+  <div class="cpu-banner" id="cpuBanner">
+    <div class="cpu-banner-icon">⚠️</div>
+    <div class="cpu-banner-text">
+      <b>⚙️ Mode CPU actif</b> — Génération réelle en cours (vidéos courtes).<br/>
+      Connectez le notebook Colab/Kaggle avec GPU pour des vidéos longues.
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('video',this)">🎬 Vidéo</button>
+    <button class="tab" onclick="switchTab('image',this)">🖼️ Image</button>
+    <button class="tab" onclick="switchTab('animate',this)">🎞️ Animer</button>
+  </div>
+
+  <!-- SECTION VIDEO -->
+  <div class="section active" id="sec-video">
+    <div class="field">
+      <div class="label">Prompt cinématographique</div>
+      <textarea id="promptVideo" rows="3" placeholder="Ex: Un samouraï solitaire sous la pluie torrentielle, ralenti cinématographique, lumière dramatique..."></textarea>
+    </div>
+    <div class="field">
+      <div class="label">Style visuel</div>
+      <div class="style-grid" id="styleGridVideo"></div>
+    </div>
+    <div class="separator"></div>
+    <div class="field">
+      <div class="label">Nombre de frames <span id="framesVal">24</span></div>
+      <input type="range" min="8" max="40" value="24" id="framesSlider" oninput="document.getElementById('framesVal').textContent=this.value"/>
+    </div>
+    <div class="field">
+      <div class="label">FPS <span id="fpsVal">8</span></div>
+      <input type="range" min="4" max="16" value="8" id="fpsSlider" oninput="document.getElementById('fpsVal').textContent=this.value"/>
+    </div>
+    <div class="field">
+      <div class="label">Steps qualité <span id="stepsValV">25</span></div>
+      <input type="range" min="10" max="35" value="25" id="stepsSliderV" oninput="document.getElementById('stepsValV').textContent=this.value"/>
+    </div>
+    <div class="separator"></div>
+    <div class="toggle-row">
+      <label>🎙️ Voix Off IA</label>
+      <label class="toggle"><input type="checkbox" id="voixToggle" checked/><span class="toggle-slider"></span></label>
+    </div>
+    <div id="voixOptions">
+      <div class="field">
+        <div class="label">Style de voix</div>
+        <select id="voixStyle">
+          <option value="masculin">🎤 Masculin — Posé et profond</option>
+          <option value="feminin">🎤 Féminin — Claire et douce</option>
+          <option value="dramatique">🎤 Dramatique — Grave et intense</option>
+          <option value="jeune">🎤 Jeune — Dynamique</option>
+          <option value="epique">🎤 Épique — Narrateur puissant</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="label">Narration personnalisée (optionnel)</div>
+        <textarea id="texteVoix" rows="2" placeholder="Laissez vide pour génération automatique..."></textarea>
+      </div>
+      <div class="field">
+        <div class="label">Volume voix <span id="volVoixVal">90%</span></div>
+        <input type="range" min="0" max="100" value="90" id="volVoix" oninput="document.getElementById('volVoixVal').textContent=this.value+'%'"/>
+      </div>
+    </div>
+    <div class="separator"></div>
+    <div class="toggle-row">
+      <label>🎵 Musique IA</label>
+      <label class="toggle"><input type="checkbox" id="musiqueToggle" checked/><span class="toggle-slider"></span></label>
+    </div>
+    <div id="musiqueOptions">
+      <div class="field">
+        <div class="label">Style musical</div>
+        <select id="musiqueStyle">
+          <option value="cinematique">🎻 Cinématique — Orchestre épique</option>
+          <option value="ambiante">🎹 Ambiante — Piano doux</option>
+          <option value="cyberpunk">🎸 Cyberpunk — Synthwave sombre</option>
+          <option value="nature">🪕 Nature — Guitare acoustique</option>
+          <option value="scifi">🎹 Sci-Fi — Électronique cosmique</option>
+          <option value="noir">🎷 Noir — Jazz mystérieux</option>
+          <option value="fantasy">🪗 Fantasy — Orchestre magique</option>
+          <option value="horror">🎻 Horror — Cordes dissonantes</option>
+          <option value="epic_battle">🥁 Bataille épique — Percussions</option>
+          <option value="romantique">🎻 Romantique — Violon solo</option>
+        </select>
+      </div>
+      <div class="field">
+        <div class="label">Volume musique <span id="volMusiqueVal">28%</span></div>
+        <input type="range" min="0" max="100" value="28" id="volMusique" oninput="document.getElementById('volMusiqueVal').textContent=this.value+'%'"/>
+      </div>
+    </div>
+    <div class="separator"></div>
+    <button class="btn btn-primary" id="btnGenerateVideo">🎬 Générer Vidéo + Voix + Musique</button>
+  </div>
+
+  <!-- SECTION IMAGE -->
+  <div class="section" id="sec-image">
+    <div class="field">
+      <div class="label">Prompt image</div>
+      <textarea id="promptImage" rows="3" placeholder="Ex: Portrait d'un guerrier fantastique, armure dorée, arrière-plan épique..."></textarea>
+    </div>
+    <div class="field">
+      <div class="label">Style visuel</div>
+      <div class="style-grid" id="styleGridImage"></div>
+    </div>
+    <div class="field">
+      <div class="label">Résolution</div>
+      <select id="imageResolution">
+        <option value="1024x1024">1024×1024 — Carré HD</option>
+        <option value="1024x576">1024×576 — Cinémascope</option>
+        <option value="576x1024">576×1024 — Portrait</option>
+        <option value="768x768">768×768 — Standard</option>
+      </select>
+    </div>
+    <div class="field">
+      <div class="label">Steps qualité <span id="stepsValI">30</span></div>
+      <input type="range" min="15" max="50" value="30" id="stepsSliderI" oninput="document.getElementById('stepsValI').textContent=this.value"/>
+    </div>
+    <div class="separator"></div>
+    <button class="btn btn-primary" id="btnGenerateImage">🖼️ Générer Image SDXL</button>
+  </div>
+
+  <!-- SECTION ANIMATE -->
+  <div class="section" id="sec-animate">
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()" ondrop="onDrop(event)" ondragover="onDragOver(event)" ondragleave="this.classList.remove('drag')">
+      <div style="font-size:32px">📤</div>
+      <p>Glissez une image ici<br/>ou cliquez pour choisir</p>
+      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="onFileSelect(event)"/>
+    </div>
+    <img id="uploadPreview" class="upload-preview"/>
+    <div class="field">
+      <div class="label">Prompt d'animation (optionnel)</div>
+      <textarea id="promptAnimate" rows="2" placeholder="Ex: La caméra s'avance lentement..."></textarea>
+    </div>
+    <div class="field">
+      <div class="label">Nombre de frames <span id="animFramesVal">25</span></div>
+      <input type="range" min="10" max="30" value="25" id="animFramesSlider" oninput="document.getElementById('animFramesVal').textContent=this.value"/>
+    </div>
+    <div class="field">
+      <div class="label">Intensité du mouvement <span id="motionVal">127</span></div>
+      <input type="range" min="1" max="255" value="127" id="motionSlider" oninput="document.getElementById('motionVal').textContent=this.value"/>
+    </div>
+    <div class="separator"></div>
+    <div class="toggle-row">
+      <label>🎵 Musique IA</label>
+      <label class="toggle"><input type="checkbox" id="animMusiqueToggle" checked/><span class="toggle-slider"></span></label>
+    </div>
+    <div class="field">
+      <select id="animMusiqueStyle">
+        <option value="cinematique">🎻 Cinématique</option>
+        <option value="ambiante">🎹 Ambiante</option>
+        <option value="fantasy">🪗 Fantasy</option>
+        <option value="noir">🎷 Noir</option>
+      </select>
+    </div>
+    <div class="separator"></div>
+    <button class="btn btn-primary" id="btnAnimate">🎞️ Animer l'Image</button>
+  </div>
+
+</div><!-- FIN SIDEBAR -->
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CONSOLE DIAGNOSTIC -->
+  <div class="console-panel" id="consolePanel">
+    <div class="console-header">
+      <span>🖥️ CONSOLE DIAGNOSTIC — BENY-JOE STUDIO v10.0</span>
+      <div class="console-header-right">
+        <button class="btn-sm btn-ghost" onclick="clearConsole()" style="font-size:10px;padding:3px 8px">🗑 Vider</button>
+        <button class="btn-sm btn-ghost" onclick="toggleConsole()" style="font-size:10px;padding:3px 8px">✕ Fermer</button>
+      </div>
+    </div>
+    <div class="console-body" id="consoleBody">
+      <div class="log-line log-info"><span class="log-time">--:--:--</span>Console initialisée. Cliquez sur "Diagnostic" pour analyser.</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-wrap" id="progressWrap" style="display:none">
+    <div class="progress-header">
+      <span id="progressType">Génération en cours...</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    <div class="progress-step" id="progressStep">Initialisation...</div>
+    <div class="progress-frames" id="progressFrames"></div>
+    <div style="text-align:center;margin-top:12px">
+      <button class="btn-sm btn-danger" onclick="cancelJob()">✕ Annuler</button>
+    </div>
+  </div>
+
+  <!-- MAIN TABS -->
+  <div class="tabs" style="margin-bottom:20px">
+    <button class="tab active" onclick="switchMainTab('results',this)">🎬 Résultats</button>
+    <button class="tab" onclick="switchMainTab('library',this)">📚 Bibliothèque</button>
+    <button class="tab" onclick="switchMainTab('history',this)">📋 Historique</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="main-results">
+    <div class="results-grid" id="resultsGrid">
+      <div class="empty-state">
+        <div class="empty-icon">🎬</div>
+        <p>Vos créations apparaîtront ici</p>
+        <p style="font-size:12px;margin-top:8px">Entrez un prompt et lancez la génération</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- LIBRARY -->
+  <div id="main-library" style="display:none">
+    <h3 style="margin-bottom:16px;font-size:15px">📚 Bibliothèque de Prompts Cinématiques</h3>
+    <div class="prompts-library" id="promptsLibrary"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div id="main-history" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="font-size:15px">📋 Historique des Générations</h3>
+      <button class="btn-sm btn-danger" onclick="clearHistory()">🗑️ Vider</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+</div>
+</div><!-- FIN LAYOUT -->
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// ════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════
+const API = '';
+const STYLES = [
+  {id:'cinematic',emoji:'🎥',label:'Cinématique'},
+  {id:'cyberpunk',emoji:'🌆',label:'Cyberpunk'},
+  {id:'epic_battle',emoji:'⚔️',label:'Épique'},
+  {id:'nature',emoji:'🌿',label:'Nature'},
+  {id:'scifi',emoji:'🚀',label:'Sci-Fi'},
+  {id:'noir',emoji:'🖤',label:'Film Noir'},
+  {id:'fantasy',emoji:'🧙',label:'Fantasy'},
+  {id:'horror',emoji:'👁️',label:'Horreur'},
+  {id:'romantique',emoji:'🌹',label:'Romantique'},
+];
+const PROMPTS = [
+  {prompt:'Un samouraï solitaire sous la pluie, ralenti, lumière dramatique, profondeur de champ',style:'cinematic'},
+  {prompt:'Cité cyberpunk de nuit, voitures volantes, pluie néon, ultra réaliste',style:'cyberpunk'},
+  {prompt:'Dragon épique survolant des montagnes enneigées, heure dorée, 8K',style:'fantasy'},
+  {prompt:'Astronaute flottant dans l\'espace profond, nebuleuse coloree, cinematique',style:'scifi'},
+  {prompt:'Guerriers antiques en bataille épique, feu et fumée, ciel dramatique',style:'epic_battle'},
+  {prompt:'Forêt enchantée bioluminescente, créatures magiques, brume, 4K',style:'fantasy'},
+  {prompt:'Détective dans une ville noir des années 40, pluie, ombres, grain de film',style:'noir'},
+  {prompt:'Rue de Tokyo de nuit, reflets néon dans la pluie, couleurs cinématiques',style:'cyberpunk'},
+  {prompt:'Montagne brumeuse au lever du soleil, vaste paysage, timelapse nuageux',style:'nature'},
+  {prompt:'Bâtiment abandonné sous la brume, clair de lune, atmosphère sombre',style:'horror'},
+  {prompt:'Station spatiale intérieure, zéro gravité, technologie futuriste',style:'scifi'},
+  {prompt:'Coucher de soleil sur la mer, reflets dorés, vagues douces, romantique',style:'romantique'},
+];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let currentTab       = 'video';
+let selectedStyleV   = 'cinematic';
+let selectedStyleI   = 'cinematic';
+let uploadedImageB64 = null;
+let currentJobId     = null;
+let pollInterval     = null;
+let results          = [];
+let history          = [];
+let gpuOnline        = false;
+let gpuData          = null;
+let cpuFallback      = false;
+let simInterval      = null;
+
+// ════════════════════════════════════════════════
+// CONSOLE
+// ════════════════════════════════════════════════
+function clog(msg, type='info') {
+  const body = document.getElementById('consoleBody');
+  if(!body) return;
+  const now = new Date().toLocaleTimeString('fr-FR',{hour12:false});
+  const div = document.createElement('div');
+  div.className = `log-line log-${type}`;
+  div.innerHTML = `<span class="log-time">${now}</span>${escHtml(msg)}`;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+  // keep max 200 lines
+  while(body.children.length > 200) body.removeChild(body.firstChild);
+}
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function clearConsole(){ document.getElementById('consoleBody').innerHTML=''; clog('Console vidée.'); }
+function toggleConsole(){
+  const p = document.getElementById('consolePanel');
+  p.classList.toggle('show');
+}
+
+// ════════════════════════════════════════════════
+// DIAGNOSTIC
+// ════════════════════════════════════════════════
+async function runDiagnostic() {
+  // Open console
+  document.getElementById('consolePanel').classList.add('show');
+  clog('════ DIAGNOSTIC DÉMARRÉ ════','info');
+  clog('Version studio: v10.0','info');
+  clog('URL origine: ' + window.location.href,'info');
+
+  // 1. Test serveur backend
+  clog('▶ Test connexion serveur backend...','info');
+  try {
+    const r = await fetch(API+'/api/health',{signal:AbortSignal.timeout(8000)});
+    if(r.ok) {
+      clog('✅ Backend OK — statut 200','ok');
+      const d = await r.json();
+      clog(`  Version: ${d.version} | Queue: ${d.queue_size} | Jobs total: ${d.jobs_total}`,'info');
+
+      // 2. Test GPU
+      clog('▶ Analyse GPU connecté...','info');
+      const gpuEntries = Object.entries(d.gpu||{});
+      if(!gpuEntries.length) {
+        clog('⚠ Aucun GPU configuré dans la réponse health','warn');
+      }
+      for(const [name, g] of gpuEntries) {
+        if(g.status==='non_configuré' || g==='non_configuré') {
+          clog(`  [${name}] ❌ URL GPU non configurée (variable env COLAB_URL_PRIMARY vide)`, 'err');
+          clog('  → Copiez l\'URL ngrok de Kaggle/Colab et collez-la dans Configuration GPU','warn');
+        } else if(g.status==='online') {
+          clog(`  [${name}] ✅ GPU EN LIGNE — Device: ${g.device||'?'} | VRAM: ${g.vram_gb||'?'}GB | Running: ${g.running}`, 'ok');
+        } else if(g.status==='offline') {
+          clog(`  [${name}] ❌ GPU HORS LIGNE — Erreur: ${g.error||'timeout'}`, 'err');
+          clog('  → Vérifiez que votre notebook Kaggle/Colab est actif et que l\'URL ngrok est valide','warn');
+        } else {
+          clog(`  [${name}] ⚠ Statut inconnu: ${JSON.stringify(g)}`, 'warn');
+        }
+      }
+      clog(`  URL GPU configurée: ${d.gpu_url||'(vide)'}`, d.gpu_url && d.gpu_url!=='NOT_CONFIGURED'?'ok':'warn');
+
+    } else {
+      clog(`❌ Backend réponse HTTP ${r.status}`,'err');
+    }
+  } catch(e) {
+    clog(`❌ Backend inaccessible: ${e.message}`,'err');
+    clog('  → Vérifiez que le service Render est démarré','warn');
+    clog('  → Render free tier: délai de 50s au réveil, attendez et réessayez','warn');
+  }
+
+  // 3. Test endpoint generate (dry run)
+  clog('▶ Test endpoint /api/generate (sans prompt)...','info');
+  try {
+    const r2 = await fetch(API+'/api/generate',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({prompt:''}),
+      signal: AbortSignal.timeout(5000)
+    });
+    const d2 = await r2.json();
+    if(d2.error==='Prompt vide') clog('✅ Endpoint /api/generate répond correctement','ok');
+    else clog(`  Réponse: ${JSON.stringify(d2)}`,'info');
+  } catch(e) {
+    clog(`❌ /api/generate inaccessible: ${e.message}`,'err');
+  }
+
+  // 4. Browser info
+  clog('▶ Info navigateur...','info');
+  clog(`  ${navigator.userAgent.substring(0,80)}`,'info');
+  clog(`  Mémoire estimée: ${navigator.deviceMemory||'?'} GB RAM`,'info');
+
+  // 5. Résumé et conseil
+  clog('════ FIN DIAGNOSTIC ════','info');
+  if(!gpuOnline) {
+    clog('💡 CONSEIL: GPU hors ligne → Notebook Colab actif en CPU ⚙️ — génération réelle (5 min/vidéo).','warn');
+    clog('   Pour une vraie génération: lancez votre notebook Kaggle avec le GPU activé,','warn');
+    clog('   copiez l\'URL ngrok et collez-la dans le panel GPU (bouton en haut).','warn');
+  } else {
+    clog('🎬 Tout semble OK! Vous pouvez lancer une génération.','ok');
+  }
+  toast('Diagnostic terminé — voir console','ok');
+}
+
+// ════════════════════════════════════════════════
+// GPU STATUS (amélioré)
+// ════════════════════════════════════════════════
+async function checkGpuStatus() {
+  clog('Vérification statut GPU...','info');
+  try {
+    const r = await fetch(API+'/api/health',{signal:AbortSignal.timeout(8000)});
+    const text = await r.text();
+    let d;
+    try { d = JSON.parse(text); }
+    catch(parseErr) {
+      clog(`⚠ Health: réponse non-JSON du backend (${text.substring(0,60)})`, 'warn');
+      throw new Error('Réponse non-JSON: ' + text.substring(0,40));
+    }
+    const gpu = Object.values(d.gpu||{})[0];
+    const dot = document.getElementById('gpuDot');
+    const lbl = document.getElementById('gpuLabel');
+
+    gpuData = gpu;
+
+    if(gpu && gpu.status==='online') {
+      gpuOnline = true;
+      cpuFallback = false;
+      dot.className = 'dot ' + (gpu.running?'busy':'online');
+      lbl.textContent = gpu.running
+        ? `GPU — ${gpu.step||'En cours'}`
+        : `GPU Prêt — ${gpu.vram_gb||'?'} GB`;
+      // update detail panel
+      setGpuInfo('online',gpu.device||'GPU',`${gpu.vram_gb||'?'} GB`,gpu.mode||'GPU');
+      document.getElementById('cpuBanner').classList.remove('show');
+      clog(`GPU en ligne: ${gpu.device||'?'} | VRAM: ${gpu.vram_gb||'?'}GB`,'ok');
+    } else {
+      gpuOnline = false;
+      cpuFallback = true;
+      if(gpu && gpu.status==='offline') {
+        dot.className = 'dot offline';
+        lbl.textContent = 'GPU Hors ligne';
+        setGpuInfo('offline','—','—','CPU ⚙️ (réel)');
+        clog(`GPU hors ligne: ${gpu.error||'connexion impossible'}`,'err');
+      } else {
+        dot.className = 'dot';
+        lbl.textContent = 'GPU non configuré';
+        setGpuInfo('non_config','—','—','CPU ⚙️ (réel)');
+        clog('GPU: URL non configurée','warn');
+      }
+      document.getElementById('cpuBanner').classList.add('show');
+    }
+  } catch(e) {
+    gpuOnline = false;
+    cpuFallback = true;
+    document.getElementById('gpuDot').className='dot offline';
+    document.getElementById('gpuLabel').textContent='Backend hors ligne';
+    setGpuInfo('offline','—','—','Hors ligne');
+    document.getElementById('cpuBanner').classList.add('show');
+    let errMsg = e.message || String(e);
+    if(errMsg.includes('JSON') || errMsg.includes('Unexpected token') || errMsg.includes('SyntaxError')) {
+      clog(`⚠ Health check: réponse HTML reçue (ngrok browser warning) — le notebook tourne peut-être!`,'warn');
+      clog(`  → Solution: vérifiez que l'URL ngrok est bien copiée et que le notebook est actif`,'warn');
+    } else {
+      clog(`Erreur health check: ${errMsg}`,'err');
+    }
+  }
+}
+
+function setGpuInfo(status, device, vram, mode) {
+  const el = (id,val,cls) => {
+    const e = document.getElementById(id);
+    if(e){e.textContent=val; e.className='value '+(cls||'');}
+  };
+  const statusMap = {online:'✅ EN LIGNE',offline:'❌ HORS LIGNE',non_config:'⚠ NON CONFIGURÉ'};
+  el('gpuInfoStatus', statusMap[status]||status, status==='online'?'online':status==='offline'?'offline':'');
+  el('gpuInfoDevice', device);
+  el('gpuInfoVram', vram);
+  el('gpuInfoMode', mode, mode.startsWith('CPU')?'cpu':'online');
+}
+
+function toggleGpuPanel() {
+  document.getElementById('gpuDetailPanel').classList.toggle('show');
+}
+
+async function updateGpuUrl() {
+  const url = document.getElementById('gpuUrlInput').value.trim();
+  if(!url.startsWith('http')) { toast('URL invalide — doit commencer par http','err'); return; }
+  try {
+    const r = await fetch(API+'/api/gpu_url',{
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({url})
+    });
+    const d = await r.json();
+    if(d.ok) {
+      toast('✅ URL GPU mise à jour!');
+      clog(`URL GPU mise à jour: ${url}`,'ok');
+      checkGpuStatus();
+    } else toast(d.error||'Erreur','err');
+  } catch(e) { toast('Connexion impossible','err'); }
+}
+
+// ════════════════════════════════════════════════
+// SIMULATED PROGRESS (CPU fallback)
+// ════════════════════════════════════════════════
+function startSimulatedProgress(label, totalMs) {
+  const bar = document.getElementById('progressBar');
+  bar.classList.add('cpu-mode');
+  let elapsed = 0;
+  const step = 1000;
+  const steps = ['🖥️ Mode CPU — Initialisation...','📝 Traitement du prompt...','🎨 Génération des frames (CPU)...','🎵 Synthèse audio...','🎞️ Assemblage final...'];
+  simInterval = setInterval(()=>{
+    elapsed += step;
+    const pct = Math.min(95, Math.round((elapsed/totalMs)*100));
+    const si = Math.floor((pct/100)*steps.length);
+    updateProgress(pct, steps[Math.min(si,steps.length-1)]);
+    clog(`[CPU Sim] ${pct}% — ${steps[Math.min(si,steps.length-1)]}`,'cpu');
+    if(elapsed >= totalMs) clearInterval(simInterval);
+  }, step);
+}
+
+function stopSimulatedProgress() {
+  if(simInterval) { clearInterval(simInterval); simInterval=null; }
+  document.getElementById('progressBar').classList.remove('cpu-mode');
+}
+
+// ════════════════════════════════════════════════
+// GENERATE FUNCTIONS
+// ════════════════════════════════════════════════
+async function generateVideo() {
+  const prompt = document.getElementById('promptVideo').value.trim();
+  if(!prompt) { toast('Entrez un prompt!','err'); return; }
+  const payload = {
+    prompt, style: selectedStyleV,
+    frames: +document.getElementById('framesSlider').value,
+    fps: +document.getElementById('fpsSlider').value,
+    steps: +document.getElementById('stepsSliderV').value,
+    voix_active: document.getElementById('voixToggle').checked,
+    style_voix: document.getElementById('voixStyle').value,
+    texte_voix: document.getElementById('texteVoix').value.trim()||null,
+    musique_active: document.getElementById('musiqueToggle').checked,
+    style_musique: document.getElementById('musiqueStyle').value,
+    volume_voix: document.getElementById('volVoix').value/100,
+    volume_musique: document.getElementById('volMusique').value/100,
+  };
+  await startJob('/api/generate', payload, 'Génération Vidéo + Voix + Musique');
+}
+
+async function generateImage() {
+  const prompt = document.getElementById('promptImage').value.trim();
+  if(!prompt) { toast('Entrez un prompt!','err'); return; }
+  const payload = {
+    prompt, style: selectedStyleI,
+    resolution: document.getElementById('imageResolution').value,
+    steps: +document.getElementById('stepsSliderI').value,
+  };
+  await startJob('/api/generate_image', payload, 'Génération Image SDXL');
+}
+
+async function animateImage() {
+  if(!uploadedImageB64) { toast('Choisissez une image!','err'); return; }
+  const payload = {
+    image_b64: uploadedImageB64,
+    prompt: document.getElementById('promptAnimate').value.trim(),
+    num_frames: +document.getElementById('animFramesSlider').value,
+    motion_bucket_id: +document.getElementById('motionSlider').value,
+    musique_active: document.getElementById('animMusiqueToggle').checked,
+    style_musique: document.getElementById('animMusiqueStyle').value,
+  };
+  await startJob('/api/img2video', payload, 'Animation Image → Vidéo');
+}
+
+// ════════════════════════════════════════════════
+// CORE JOB MANAGER
+// ════════════════════════════════════════════════
+async function startJob(endpoint, payload, label) {
+  disableButtons(true);
+  showProgress(label);
+  clog(`═══ JOB DÉMARRÉ: ${label} ═══`,'info');
+  clog(`Prompt: "${(payload.prompt||'').substring(0,80)}"`,'info');
+  clog(`GPU Online: ${gpuOnline} | CPU Fallback: ${cpuFallback}`,'info');
+
+  // ══ Toujours envoyer au GPU — jamais de simulation ═══════════════
+  let lastError = '';
+  for(let attempt=1; attempt<=3; attempt++) {
+    try {
+      updateProgress(0, attempt>1 ? `Reconnexion ${attempt}/3...` : 'Envoi au GPU...');
+      clog(`Tentative GPU ${attempt}/3 → ${endpoint}`,'info');
+      const ctrl = new AbortController();
+      const timer = setTimeout(()=>ctrl.abort(), 25000);
+      const r = await fetch(API+endpoint, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload), signal: ctrl.signal,
+      });
+      clearTimeout(timer);
+      const d = await r.json();
+      clog(`Réponse serveur: ${JSON.stringify(d).substring(0,100)}`,'info');
+
+      if(d.error) {
+        clog(`Erreur serveur: ${d.error}`,'err');
+        if(d.error.includes('GPU') || d.error.includes('ngrok') || d.error.includes('Colab') || d.error.includes('hors ligne')) {
+          toast(`❌ ${d.error} — Relancez Kaggle/Colab et mettez à jour l'URL ngrok`,'err');
+          stopProgress(); disableButtons(false); return;
+        }
+        toast(d.error,'err'); stopProgress(); disableButtons(false); return;
+      }
+      if(!d.job_id) {
+        clog('Réponse invalide: pas de job_id','err');
+        toast('Réponse invalide serveur','err'); stopProgress(); disableButtons(false); return;
+      }
+      currentJobId = d.job_id;
+      clog(`Job GPU accepté: ${d.job_id} — polling démarré`,'ok');
+      pollJob(currentJobId, label, payload.prompt||'');
+      return;
+    } catch(e) {
+      lastError = e.message||'timeout';
+      clog(`Tentative ${attempt} échouée: ${lastError}`,'err');
+      if(attempt<3) {
+        updateProgress(0, `Serveur endormi, réveil... (${attempt}/3)`);
+        clog('Attente 6s avant retry...','info');
+        await new Promise(res=>setTimeout(res,6000));
+      }
+    }
+  }
+  // Backend inaccessible après 3 tentatives → erreur claire
+  clog('Backend inaccessible (3 tentatives) — vérifiez le serveur Render et l\'URL ngrok','err');
+  toast('❌ Serveur inaccessible — Vérifiez benyjoe-studio.onrender.com et relancez Kaggle/Colab','err');
+  stopProgress();
+  disableButtons(false);
+}
+
+// ════════════════════════════════════════════════
+// CPU SIMULATION MODE
+// ════════════════════════════════════════════════
+function simulateCPUGeneration(label, prompt) {
+  clog('════ MODE CPU SIMULATION ════','cpu');
+  clog('Aucune connexion GPU/CPU notebook disponible.','cpu');
+  clog('ATTENTION: ceci est une SIMULATION — aucune vraie vidéo ne sera générée.','warn');
+  clog('Pour une vraie génération: lancez le notebook Kaggle (CPU ou GPU activé),','warn');
+  clog('puis copiez l\'URL ngrok dans le panel GPU (bouton en haut à gauche).','warn');
+
+  const totalMs = 45000; // 45s simulation
+  startSimulatedProgress(label, totalMs);
+
+  setTimeout(()=>{
+    stopSimulatedProgress();
+    clearInterval(pollInterval);
+    updateProgress(100,'✅ Simulation terminée (CPU)');
+    setTimeout(()=>{
+      stopProgress();
+      disableButtons(false);
+      // Show placeholder result card
+      const fakeResult = {
+        url: null,
+        prompt,
+        type: label,
+        jobId: 'cpu-sim-'+Date.now(),
+        time: new Date().toLocaleTimeString(),
+        isSim: true,
+      };
+      results.unshift(fakeResult);
+      renderResults();
+      addHistory('cpu-sim','[SIMULATION CPU] '+prompt, label, null);
+      toast('✅ Simulation terminée — Configurez GPU pour une vraie génération','ok');
+      clog('Simulation terminée. Pour une vraie génération, activez votre GPU Kaggle/Colab.','cpu');
+    }, 1200);
+  }, totalMs);
+}
+
+// ════════════════════════════════════════════════
+// POLL JOB
+// ════════════════════════════════════════════════
+function pollJob(jobId, label, prompt) {
+  clearInterval(pollInterval);
+  clog(`Polling démarré pour job ${jobId} (toutes les 5s)`,'info');
+  let queuedCount = 0;
+  const MAX_QUEUED = 60; // 5 minutes (60 × 5s) — pas de bascule CPU
+
+  pollInterval = setInterval(async()=>{
+    try {
+      const r = await fetch(API+'/api/status/'+jobId);
+      const d = await r.json();
+      updateProgress(d.progress||0, d.step||'En cours...', d.current_frame, d.total_frames);
+      clog(`[${jobId}] ${d.progress||0}% — ${d.step||''} — status:${d.status}`,'info');
+
+      // ══ BLOCAGE QUEUED → attente longue, PAS de simulation CPU ══
+      if(d.status==='queued') {
+        queuedCount++;
+        const waited = queuedCount*5;
+        const maxWait = MAX_QUEUED*5;
+        clog(`[${jobId}] Queued depuis ${waited}s... (timeout dans ${maxWait-waited}s)`,'warn');
+        updateProgress(0, `⏳ GPU en attente... ${waited}s / ${maxWait}s max`);
+        if(queuedCount >= MAX_QUEUED) {
+          clearInterval(pollInterval);
+          try { await fetch(API+'/api/cancel/'+jobId,{method:'POST'}); } catch(e){}
+          clog(`❌ Job bloqué ${maxWait}s en queue — GPU hors ligne ou URL ngrok expirée`,'err');
+          toast(`❌ GPU non disponible après ${maxWait}s — Relancez Kaggle/Colab et mettez à jour l'URL ngrok`,'err');
+          stopProgress();
+          disableButtons(false);
+        }
+        return;
+      }
+      queuedCount = 0;
+
+      if(d.status==='done') {
+        clearInterval(pollInterval);
+        stopProgress();
+        disableButtons(false);
+        checkGpuStatus();
+        addResult(d.result, prompt, label, jobId);
+        addHistory(jobId, prompt, label, d.result);
+        clog(`✅ Job ${jobId} terminé! Résultat: ${d.result}`,'ok');
+        toast('✅ Génération terminée!');
+      } else if(d.status==='error') {
+        clearInterval(pollInterval);
+        clog(`❌ Erreur job ${jobId}: ${d.error}`,'err');
+        stopProgress();
+        disableButtons(false);
+        toast(d.error||'❌ Erreur GPU — Vérifiez URL ngrok et notebook Kaggle/Colab','err');
+      } else if(d.status==='cancelled') {
+        clearInterval(pollInterval);
+        stopProgress();
+        disableButtons(false);
+        clog(`Job ${jobId} annulé`,'warn');
+        toast('Job annulé');
+      }
+    } catch(e) {
+      clog(`Erreur poll: ${e.message}`,'warn');
+    }
+  }, 5000);
+}
+
+async function cancelJob() {
+  if(!currentJobId) return;
+  clearInterval(pollInterval);
+  stopSimulatedProgress();
+  try { await fetch(API+'/api/cancel/'+currentJobId,{method:'POST'}); } catch(e){}
+  stopProgress();
+  disableButtons(false);
+  clog(`Job ${currentJobId} annulé par l'utilisateur`,'warn');
+  toast('Job annulé');
+}
+
+// ════════════════════════════════════════════════
+// PROGRESS UI
+// ════════════════════════════════════════════════
+function showProgress(label) {
+  document.getElementById('progressWrap').style.display='block';
+  document.getElementById('progressType').textContent=label;
+  updateProgress(0,'Envoi au GPU...');
+}
+function stopProgress() {
+  document.getElementById('progressWrap').style.display='none';
+}
+function updateProgress(pct, step, frame, total) {
+  document.getElementById('progressBar').style.width=pct+'%';
+  document.getElementById('progressPct').textContent=pct+'%';
+  document.getElementById('progressStep').textContent=step||'';
+  document.getElementById('progressFrames').textContent=
+    (frame&&total) ? `Frame ${frame}/${total}` : '';
+}
+function disableButtons(state) {
+  ['btnGenerateVideo','btnGenerateImage','btnAnimate'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b) b.disabled=state;
+  });
+}
+
+// ════════════════════════════════════════════════
+// RESULTS
+// ════════════════════════════════════════════════
+function addResult(url, prompt, type, jobId) {
+  clog(`Ajout résultat: ${url}`,'ok');
+  results.unshift({url, prompt, type, jobId, time:new Date().toLocaleTimeString(), isSim:false});
+  renderResults();
+  // Switch automatiquement sur l'onglet résultats
+  switchMainTab('results', document.querySelector('.tabs:nth-of-type(2) .tab'));
+}
+function renderResults() {
+  const grid = document.getElementById('resultsGrid');
+  if(!results.length) {
+    grid.innerHTML='<div class="empty-state"><div class="empty-icon">🎬</div><p>Vos créations apparaîtront ici</p></div>';
+    return;
+  }
+  grid.innerHTML = results.map((r,i)=>{
+    if(r.isSim) {
+      return `<div class="result-card" style="border-color:#ff9900">
+        <div style="background:#1a1000;padding:40px 20px;text-align:center;color:#ff9900;font-size:32px">🖥️</div>
+        <div class="card-info">
+          <div class="card-title" style="color:#ff9900">[CPU SIM] ${r.prompt||r.type}</div>
+          <div class="card-meta">Simulation CPU • ${r.time}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">GPU hors ligne — Configurez l'URL GPU pour une vraie génération</div>
+        </div>
+      </div>`;
+    }
+    const isImage = r.url && r.url.includes('/image/');
+    const media = isImage
+      ? `<img src="${r.url}" alt="Image" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover"/>`
+      : `<video src="${r.url}" controls preload="auto" playsinline style="width:100%;aspect-ratio:16/9;background:#000;display:block">
+           <source src="${r.url}" type="video/mp4"/>
+           Votre navigateur ne supporte pas la lecture vidéo.
+         </video>`;
+    const shortUrl = r.url ? r.url.replace(/^https?:\/\/[^\/]+/,'').substring(0,40) : '';
+    return `<div class="result-card">
+      ${r.url ? media : '<div style="background:#111;padding:40px;text-align:center;color:var(--muted)">⏳</div>'}
+      <div class="card-info">
+        <div class="card-title">${r.prompt||r.type}</div>
+        <div class="card-meta">${r.type} • ${r.time}</div>
+        ${r.url?`<div style="font-size:10px;color:var(--muted);margin-bottom:8px;word-break:break-all">${r.url}</div>`:''}
+        <div class="card-actions">
+          ${r.url?`<a class="btn-sm btn-ghost" href="${r.url}" target="_blank" download="BENYJOE_${r.jobId}.mp4" style="text-decoration:none;padding:7px 12px;font-size:12px">⬇ Télécharger</a>`:''}
+          ${r.url?`<button class="btn-sm btn-ghost" onclick="copyUrl('${r.url}')">🔗 Copier URL</button>`:''}
+          ${r.url?`<a class="btn-sm btn-ghost" href="${r.url}" target="_blank" style="text-decoration:none;padding:7px 12px;font-size:12px">▶ Ouvrir</a>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyUrl(url) {
+  navigator.clipboard.writeText(url).then(()=>toast('🔗 URL copiée!'));
+}
+
+// ════════════════════════════════════════════════
+// HISTORY
+// ════════════════════════════════════════════════
+function addHistory(jobId, prompt, type, url) {
+  history.unshift({jobId, prompt, type, url, time:new Date().toLocaleString()});
+  renderHistory();
+}
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if(!history.length) {
+    list.innerHTML='<div class="empty-state"><p>Aucune génération pour linstant</p></div>';
+    return;
+  }
+  list.innerHTML = history.slice(0,40).map(h=>
+    `<div class="history-item">
+      <span class="pill ${h.url?'pill-done':'pill-queue'}">${h.url?'✅ Done':'🖥️ CPU'}</span>
+      <span class="h-prompt">${h.prompt||h.type}</span>
+      <span class="h-time">${h.time}</span>
+      ${h.url?`<a class="btn-sm btn-ghost" href="${h.url}" download style="text-decoration:none;padding:6px 10px;font-size:11px">⬇</a>`:''}
+    </div>`
+  ).join('');
+}
+async function clearHistory() {
+  try { await fetch(API+'/api/clear_queue',{method:'POST'}); } catch(e){}
+  history=[]; renderHistory(); toast('Historique vidé');
+}
+
+// ════════════════════════════════════════════════
+// AUTH
+// ════════════════════════════════════════════════
+function checkAutoLogin() {
+  if(localStorage.getItem('bjAuth')==='1') showStudio();
+}
+async function login() {
+  const pin = document.getElementById('pinInput').value.trim();
+  if(pin==='2022002'||pin==='demo') {
+    localStorage.setItem('bjAuth','1');
+    showStudio();
+    return;
+  }
+  try {
+    const r = await fetch(API+'/api/auth',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({pin}),signal:AbortSignal.timeout(8000)
+    });
+    const d = await r.json();
+    if(d.ok){ localStorage.setItem('bjAuth','1'); showStudio(); }
+    else { document.getElementById('loginError').style.display='block'; }
+  } catch(e) {
+    // Offline fallback
+    document.getElementById('loginError').style.display='block';
+  }
+}
+function showStudio() {
+  document.getElementById('loginModal').style.display='none';
+  document.getElementById('mainHeader').style.display='flex';
+  document.getElementById('mainLayout').style.display='grid';
+  checkGpuStatus();
+  setInterval(checkGpuStatus, 30000);
+  clog('Studio ouvert. Bienvenue KHEDIM BENYAKHLEF!','ok');
+  clog('Lancement du premier diagnostic automatique...','info');
+  setTimeout(runDiagnostic, 1500);
+}
+function logout() {
+  localStorage.removeItem('bjAuth');
+  location.reload();
+}
+
+// ════════════════════════════════════════════════
+// STYLES & PROMPTS
+// ════════════════════════════════════════════════
+function buildStyleGrids() {
+  ['styleGridVideo','styleGridImage'].forEach((gid,gi)=>{
+    const grid=document.getElementById(gid);
+    grid.innerHTML=STYLES.map(s=>
+      `<button class="style-btn ${(gi===0?selectedStyleV:selectedStyleI)===s.id?'active':''}"
+        onclick="selectStyle('${gi===0?'video':'image'}','${s.id}',this)">
+        <span class="emoji">${s.emoji}</span>${s.label}
+      </button>`
+    ).join('');
+  });
+}
+function buildPromptsLibrary() {
+  const lib=document.getElementById('promptsLibrary');
+  lib.innerHTML=PROMPTS.map(p=>
+    `<div class="prompt-chip" onclick="usePrompt('${p.prompt.replace(/'/g,"\\'")}','${p.style}')">
+      <b>${STYLES.find(s=>s.id===p.style)?.emoji||'🎬'}</b> ${p.prompt}
+    </div>`
+  ).join('');
+}
+function selectStyle(tab,styleId,btn) {
+  if(tab==='video') selectedStyleV=styleId;
+  else selectedStyleI=styleId;
+  btn.closest('.style-grid').querySelectorAll('.style-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function usePrompt(prompt,style) {
+  document.getElementById('promptVideo').value=prompt;
+  switchMainTab('results',document.querySelector('.tab.active'));
+  toast('📋 Prompt chargé!');
+}
+
+// ════════════════════════════════════════════════
+// UPLOAD
+// ════════════════════════════════════════════════
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag');
+  const file=e.dataTransfer.files[0];
+  if(file&&file.type.startsWith('image/')) loadImage(file);
+}
+function onDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag');
+}
+function onFileSelect(e) {
+  const file=e.target.files[0];
+  if(file) loadImage(file);
+}
+function loadImage(file) {
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    uploadedImageB64=e.target.result.split(',')[1];
+    const preview=document.getElementById('uploadPreview');
+    preview.src=e.target.result;
+    preview.style.display='block';
+    document.getElementById('uploadZone').querySelector('p').textContent='Image chargée ✅ Cliquez pour changer';
+    toast('🖼️ Image chargée!');
+  };
+  reader.readAsDataURL(file);
+}
+
+// ════════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════════
+function switchTab(tab,btn) {
+  currentTab=tab;
+  document.querySelectorAll('.tabs:first-of-type .tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+tab).classList.add('active');
+}
+function switchMainTab(tab,btn) {
+  ['results','library','history'].forEach(t=>{
+    const el=document.getElementById('main-'+t);
+    if(el) el.style.display=t===tab?'block':'none';
+  });
+  document.querySelectorAll('.tabs').forEach((tabs,i)=>{
+    if(i>0) tabs.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  });
+  if(btn) btn.classList.add('active');
+  if(tab==='history') renderHistory();
+}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg,type='ok') {
+  const wrap=document.getElementById('toastWrap');
+  const div=document.createElement('div');
+  div.className=`toast ${type}`;
+  div.textContent=msg;
+  wrap.appendChild(div);
+  setTimeout(()=>div.remove(),4500);
+}
+
+// ════════════════════════════════════════════════
+// GLOBALS & INIT
+// ════════════════════════════════════════════════
+window.login=login; window.logout=logout;
+window.switchTab=switchTab; window.switchMainTab=switchMainTab;
+window.selectStyle=selectStyle; window.usePrompt=usePrompt;
+window.generateVideo=generateVideo; window.generateImage=generateImage;
+window.animateImage=animateImage; window.cancelJob=cancelJob;
+window.updateGpuUrl=updateGpuUrl; window.toggleGpuPanel=toggleGpuPanel;
+window.copyUrl=copyUrl; window.clearHistory=clearHistory;
+window.onDrop=onDrop; window.onDragOver=onDragOver; window.onFileSelect=onFileSelect;
+window.toggleConsole=toggleConsole; window.clearConsole=clearConsole;
+window.runDiagnostic=runDiagnostic; window.checkGpuStatus=checkGpuStatus;
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildStyleGrids();
+  buildPromptsLibrary();
+  document.getElementById('pinInput').addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+  document.getElementById('voixToggle').addEventListener('change',e=>{
+    document.getElementById('voixOptions').style.display=e.target.checked?'block':'none';
+  });
+  document.getElementById('musiqueToggle').addEventListener('change',e=>{
+    document.getElementById('musiqueOptions').style.display=e.target.checked?'block':'none';
+  });
+  document.getElementById('btnGenerateVideo').addEventListener('click',generateVideo);
+  document.getElementById('btnGenerateImage').addEventListener('click',generateImage);
+  document.getElementById('btnAnimate').addEventListener('click',animateImage);
+  checkAutoLogin();
+});
+</script>
+</body>
+</html>

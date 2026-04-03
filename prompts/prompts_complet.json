@@ -1,0 +1,211 @@
+{
+  "version": "5.0",
+  "author": "KHEDIM BENYAKHLEF dit BENY-JOE",
+  "description": "Bibliothèque complète de prompts cinématographiques professionnels",
+  "categories": {
+    "cinematic": {
+      "label": "Cinématique",
+      "prompts": [
+        "Un samouraï solitaire sous la pluie torrentielle, ralenti cinématographique, lumière dramatique latérale, profondeur de champ, grain de film 35mm, 4K HDR",
+        "Vieille femme aux yeux sages regardant par une fenêtre pluvieuse, Paris années 50, reflets de lumière, photo de rue cinématique, contraste dramatique",
+        "Chemin forestier au lever du soleil, rayons de lumière filtrant à travers les arbres, brume matinale, cerf en arrière-plan, silence absolu, 8K",
+        "Musicien de jazz jouant sous un pont la nuit, reflets dans une flaque d'eau, lumières de la ville au loin, grain cinématique",
+        "Train de nuit traversant un viaduc dans les montagnes, lumières des wagons dans le brouillard, longue exposition cinématographique",
+        "Marché du Caire à l'aube, vendeurs déballant leurs étals, fumée des braseros, lumière orange chaude, cinéma documentaire",
+        "Phare isolé au bord des falaises, tempête en approche, vagues géantes, ciel dramatique, éclairs lointains, long plan fixe",
+        "Danseuse de flamenco dans une cour andalouse, robe rouge, ombres profondes, un seul projecteur, grain de film argentique",
+        "Palais abandonné envahi par la végétation, lumière d'été filtrant à travers les vitres brisées, poussière en suspension, mélancolie"
+      ],
+      "narrations": {
+        "fr": [
+          "Chaque instant se grave dans la mémoire comme une image éternelle.",
+          "Il y a des moments que le temps n'efface jamais.",
+          "Dans le silence de cet instant, toute une vie se raconte.",
+          "Certaines images parlent plus fort que les mots."
+        ]
+      }
+    },
+    "cyberpunk": {
+      "label": "Cyberpunk",
+      "prompts": [
+        "Mégapole cyberpunk à minuit, tours holographiques, pluie acide reflétant les néons, drones de surveillance silencieux, 8K ultra-réaliste",
+        "Hacker dans un appartement encombré de câbles, visage éclairé par les écrans, données financières défilant, ultra détaillé",
+        "Robot androïde humanoïde marchant dans une ruelle encombrée, vapeur s'échappant des canalisations, vendeurs de rues méfiants",
+        "Course poursuite de motos volantes entre les gratte-ciels au crépuscule, traînées lumineuses, vitesse extrême",
+        "Marché noir souterrain de modifications corporelles, corps améliorés exposés derrière des vitrines, néon rouge",
+        "Policière cyborg sur le toit d'un building, vue sur la ville dystopique, imperméable trempé, regard déterminé",
+        "Intelligence artificielle prenant conscience, serveurs qui s'illuminent, données numériques formant un visage, ambiance froide",
+        "Bar à cocktails cyberpunk sur le 80ème étage, vue sur l'enfer de la ville en dessous, clients mi-humains mi-machines"
+      ],
+      "narrations": {
+        "fr": [
+          "Dans cette ville, l'humanité s'est perdue entre les circuits et les néons.",
+          "Le futur n'est pas ce qu'on avait imaginé. Il est bien plus sombre.",
+          "Les machines ont hérité de la terre. Mais pas de l'âme.",
+          "2087. La frontière entre l'homme et la machine n'existe plus."
+        ]
+      }
+    },
+    "fantasy": {
+      "label": "Fantasy",
+      "prompts": [
+        "Dragon ancestral de glace planant au-dessus d'une toundra bleue, ailes déployées, son souffle givre l'air, heure bleue, 8K",
+        "Elfin archer dans une forêt bioluminescente, flèche lumineuse tendue, créatures magiques l'observant depuis les branches",
+        "Château flottant dans les nuages, cascades se déversant dans le ciel, pont de cristal menant à son entrée, lever de soleil",
+        "Sorcière préparant une potion dans une tour de pierre, fioles multicolores, hibou sage sur son épaule, lune pleine par la fenêtre",
+        "Armée de chevaliers féeriques avançant au coucher de soleil, bannières d'or et d'argent, montures légendaires, musique épique",
+        "Forêt des anciens, arbres millénaires avec des visages gravés dans l'écorce, lucioles magiques, fontaine secrète",
+        "Titan de pierre s'éveillant après des siècles de sommeil, lave coulant dans ses articulations, tremblement de terre",
+        "Village de hobbit caché dans une vallée verdoyante, maisons rondes, champs de fleurs, rivière cristalline, paix absolue",
+        "Portail dimensionnel s'ouvrant dans le ciel nocturne, galaxies visibles de l'autre côté, héros hésitant au bord"
+      ],
+      "narrations": {
+        "fr": [
+          "Dans les royaumes de l'au-delà, la magie n'est pas un mythe. C'est une réalité.",
+          "Il existe des mondes que la raison ne peut pas expliquer.",
+          "La légende dit qu'un héros s'élèvera. Ce jour est aujourd'hui.",
+          "Entre les étoiles et la terre, un monde attend d'être découvert."
+        ]
+      }
+    },
+    "scifi": {
+      "label": "Science-Fiction",
+      "prompts": [
+        "Vaisseau amiral terrien émergeant d'un saut hyperspatial, nébuleuse violette en fond, drones d'escorte se déployant, 8K",
+        "Terraformation de Mars en accéléré, glace polaire fondant, océans apparaissant, végétation verte progressant, timelapse",
+        "Extraterrestre bioluminescent premier contact, astronaute en combinaison réfléchissante, tension de l'instant historique",
+        "Mégastructure orbitale — un anneau artificiel autour d'une planète déserte, coucher de soleil, ingénieurs en combinaison EVA",
+        "Cité sous-marine futuriste, dômes de verre géants, baleines cyborg nageant à l'extérieur, lumière bleue profonde",
+        "Robot de combat abandonné sur un champ de bataille planétaire, rouille et végétation alien, fin des guerres",
+        "Ascenseur spatial partant de la surface terrestre, vue progressive de l'atmosphère puis de l'espace, 4K documentaire",
+        "Colonie lunaire de 2150, dômes pressurisés, éclairés de lumière artificielle, Terre visible au firmament",
+        "Simulation d'évolution d'une espèce extraterrestre sur exoplanète, millions d'années en quelques secondes, scientifique observant"
+      ],
+      "narrations": {
+        "fr": [
+          "L'univers est vaste. Et nous n'en avons exploré qu'une infime parcelle.",
+          "Le cosmos ne nous a pas encore livré tous ses secrets.",
+          "Un jour, l'humanité regardera les étoiles et dira: nous sommes enfin chez nous.",
+          "La frontière finale n'est pas une ligne. C'est un horizon qui recule sans cesse."
+        ]
+      }
+    },
+    "noir": {
+      "label": "Film Noir",
+      "prompts": [
+        "Détective privé dans une ruelle de Chicago 1947, trenchcoat mouillé, cigarette, ombre projetée par un lampadaire unique",
+        "Femme fatale en robe noire descendant un escalier de marbre, lumière de côté, expression énigmatique, noir et blanc",
+        "Salle de poker clandestine, fumée de cigare, jeu de cartes sur la table, gangsters en costume, tension palpable",
+        "Journaliste découvrant des photos compromettantes dans une chambre de motel, pluie sur la vitre, peur dans les yeux",
+        "Rencontre nocturne dans un parking souterrain, deux silhouettes sous un seul réverbère, mallette échangée",
+        "Bar de jazz miteux 3h du matin, pianiste jouant seul, détective ivre au comptoir, barman qui essuie un verre",
+        "Voiture de police suivant un suspect dans une rue brumeuse, rues pavées, phares dans la brume, Paris années 50",
+        "Salle d'interrogatoire, ampoule oscillante, inspecteur fatigué face à un suspect silencieux, tension maximale"
+      ],
+      "narrations": {
+        "fr": [
+          "Dans cette ville, tout le monde a un secret. Et les secrets finissent toujours par éclater.",
+          "Il y a des vérités qu'on préférerait ne jamais connaître.",
+          "La nuit appartient aux ombres. Et les ombres appartiennent à ceux qui savent chercher.",
+          "Toute histoire noire commence par une nuit ordinaire."
+        ]
+      }
+    },
+    "epic_battle": {
+      "label": "Bataille Épique",
+      "prompts": [
+        "Charge de cavalerie vikingue sur une plaine enneigée, cris de guerre, haleine dans l'air froid, 8K ralenti",
+        "Catapultes médiévales bombardant un château, murs s'effondrant en flammes, défenseurs en armure, épique",
+        "Dernière bataille de deux titans de fer, ville dévastée en fond, impacts de coups créant des ondes de choc",
+        "Armada navale de galères romaines s'affrontant en mer Méditerranée, rames brisées, incendies sur les ponts",
+        "Commandant regardant sa légion avancer à l'aube, bannières au vent, destin du monde dans la balance",
+        "Guerriers zulus défendant leur terre contre une armée coloniale, bravoure, couleurs vives, tragédie historique",
+        "Dragons de deux armées adverses s'affrontant au-dessus d'une forteresse, éclairs et feu, nuages de bataille",
+        "Gladiateur épuisé face au Colisée déchaîné, adversaire tombé, question de vie ou de mort, épée levée"
+      ],
+      "narrations": {
+        "fr": [
+          "Certains combats ne se gagnent pas avec des armes. Mais avec l'âme.",
+          "Le courage n'est pas l'absence de peur. C'est avancer malgré elle.",
+          "Des milliers d'hommes. Un seul destin. Une seule bataille.",
+          "L'histoire se souvient des victoires. Mais les mères pleurent les morts."
+        ]
+      }
+    },
+    "horror": {
+      "label": "Horreur",
+      "prompts": [
+        "Manoir victorien isolé dans la tempête, une seule fenêtre éclairée, silhouette regardant dehors, brouillard dense",
+        "Corridor d'hôpital psychiatrique abandonné, fauteuils roulants vides, lumières fluorescentes clignotant, fin de couloir obscur",
+        "Forêt la nuit, lampe torche découvrant des symboles gravés sur les arbres, respiration visible dans le froid",
+        "Enfant au bout d'un couloir interminable, jouet tombant au sol, porte au fond s'ouvrant lentement sur l'obscurité",
+        "Submersible explorant une épave, hublot révélant une main humaine sur la vitre intérieure de l'épave",
+        "Village abandonné depuis 1986, maisons envahies par la végétation, poupées dans les fenêtres cassées, silence absolu",
+        "Miroir dans un couloir reflétant quelque chose que la personne devant ne voit pas, détail flou mais inquiétant",
+        "Scientifique en tenue de protection découvrant une forme de vie inconnue dans une grotte profonde, isolé, sans réseau"
+      ],
+      "narrations": {
+        "fr": [
+          "Certaines portes ne doivent jamais être ouvertes.",
+          "La peur la plus profonde n'est pas la mort. C'est l'inconnu.",
+          "Il existe des lieux où même la lumière refuse de pénétrer.",
+          "Ils disaient que c'était une légende. Ils avaient tort."
+        ]
+      }
+    },
+    "nature": {
+      "label": "Nature",
+      "prompts": [
+        "Migration des gnous au Kenya, millions d'animaux traversant la Mara en crue, vue aérienne épique, saison des pluies",
+        "Aurore boréale au-dessus d'un lac gelé islandais, reflets parfaits dans la glace, silhouette d'un photographe",
+        "Eruption volcanique hawaïenne, lave rouge coulant vers l'océan, vapeur, pouvoir de la nature, heure dorée",
+        "Banc de sardines se défendant contre des dauphins, ballet aquatique parfait, lumière sous-marine dorée",
+        "Bambouseraie japonaise dans le vent, sons, lumière filtrée, moine bouddhiste marchant au loin",
+        "Séquoia millénaire dans la brume du matin, forêt californienne, dimension cosmique de l'arbre géant",
+        "Canyon vertigineux au lever du soleil, condors plongeant dans les thermiques, Colorado River en fond",
+        "Geysers de Yellowstone en hiver, vapeur dans l'air arctique, bisons impassibles à proximité"
+      ],
+      "narrations": {
+        "fr": [
+          "La nature n'a pas besoin de nous. Mais nous avons besoin d'elle.",
+          "Il suffit de se taire pour entendre la voix de la Terre.",
+          "Chaque créature vivante est une merveille que nous ne méritons pas.",
+          "La beauté du monde n'attend pas notre permission pour exister."
+        ]
+      }
+    },
+    "romantique": {
+      "label": "Romantique",
+      "prompts": [
+        "Couple sous la pluie à Paris, Eiffel Tower illuminée, parapluie rouge, premier baiser, nuit féerique",
+        "Déclaration d'amour sur un voilier au coucher de soleil, mer calme, fleurs sur le pont, moment suspendu",
+        "Vieux couple tenant la main dans un jardin d'automne, 50 ans ensemble, regard complice, lumière dorée",
+        "Rencontre dans une bibliothèque ancienne, mains se touchant sur le même livre, sourires timides, lumière tamisée",
+        "Danse lente dans un appartement parisien, seuls au monde, musique de jazz, bougies, bonheur simple",
+        "Lettre d'amour écrite à la lumière d'une bougie, plume d'oie, parchemin, fenêtre donnant sur la mer",
+        "Pique-nique en Provence, lavande à perte de vue, nappe à carreaux, rires, insouciance, été parfait",
+        "Retrouvailles dans une gare, étreinte longue, valise tombée au sol, larmes et sourires mêlés"
+      ],
+      "narrations": {
+        "fr": [
+          "L'amour ne se cherche pas. Il se reconnaît.",
+          "Il y a des rencontres qui changent le cours d'une vie entière.",
+          "Aimer, c'est décider chaque jour de continuer.",
+          "Le plus beau des voyages, c'est celui qu'on fait à deux."
+        ]
+      }
+    }
+  },
+  "tips": {
+    "fr": [
+      "Ajoutez toujours une indication de lumière : 'heure dorée', 'lumière dramatique', 'contre-jour', 'clair de lune'",
+      "Précisez la caméra : 'plan large', 'gros plan', 'plan poitrine', 'vue aérienne', 'contre-plongée'",
+      "Indiquez le mouvement : 'ralenti', 'zoom avant', 'panoramique', 'caméra portée', 'dolly shot'",
+      "Ajoutez une référence de qualité : '4K', '8K', 'photorealistic', 'ultra detailed', 'masterpiece'",
+      "Mentionnez l'atmosphère : 'mélancolique', 'épique', 'mystérieux', 'romantique', 'tendu'",
+      "Utilisez des références de films : 'style Christopher Nolan', 'style Kubrick', 'style Wong Kar-Wai'",
+      "Pour les portraits : ajoutez 'bokeh', 'profondeur de champ', 'regard expressif', 'émotions visibles'",
+      "Pour les paysages : 'ultra wide angle', 'foreground interest', 'leading lines', 'rule of thirds'"
+    ]
+  }
+}

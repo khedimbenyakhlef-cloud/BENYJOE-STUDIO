@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: BENYJOE-STUDIO-v10
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && gunicorn app:app --bind 0.0.0.0:$PORT --timeout 420 --workers 1 --threads 4
+    envVars:
+      - key: COLAB_URL_PRIMARY
+        value: PUT_YOUR_NGROK_URL_HERE
+      - key: COLAB_URL_SECONDARY
+        value: NOT_CONFIGURED
+      - key: ACCESS_PIN
+        value: "2022002"
+      - key: PORT
+        value: "10000"

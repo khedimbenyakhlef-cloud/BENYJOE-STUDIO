@@ -1,0 +1,14 @@
+.env
+outputs/
+logs/
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+Thumbs.db
+*.mp4
+*.wav
+*.png
+*.jpg
+venv/
+.venv/

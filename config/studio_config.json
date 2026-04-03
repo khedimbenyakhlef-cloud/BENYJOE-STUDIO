@@ -1,0 +1,162 @@
+{
+  "version": "5.0",
+  "author": "KHEDIM BENYAKHLEF dit BENY-JOE",
+  "description": "Configuration avancée du Studio IA — Tous les paramètres modifiables",
+
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "workers": 1,
+    "threads": 4,
+    "timeout": 420,
+    "max_queue": 30,
+    "poll_interval_seconds": 7,
+    "poll_max_fails": 10,
+    "poll_timeout_seconds": 720
+  },
+
+  "auth": {
+    "pin": "2022002",
+    "description": "Changez votre PIN dans render.yaml → ACCESS_PIN"
+  },
+
+  "models": {
+    "animatediff": {
+      "id": "guoyww/animatediff-motion-adapter-v1-5-2",
+      "base": "runwayml/stable-diffusion-v1-5",
+      "dtype": "float16",
+      "vram_required_gb": 8,
+      "default_params": {
+        "num_frames": 24,
+        "width": 512,
+        "height": 512,
+        "steps": 25,
+        "guidance_scale": 7.5,
+        "fps": 8,
+        "chunk_size": 8
+      },
+      "limits": {
+        "max_frames": 40,
+        "max_steps": 35,
+        "max_width": 768,
+        "max_height": 768
+      }
+    },
+    "sdxl": {
+      "id": "stabilityai/stable-diffusion-xl-base-1.0",
+      "dtype": "float16",
+      "variant": "fp16",
+      "vram_required_gb": 10,
+      "default_params": {
+        "width": 1024,
+        "height": 1024,
+        "steps": 30,
+        "guidance_scale": 7.5
+      },
+      "limits": {
+        "max_steps": 50,
+        "supported_resolutions": [
+          "1024x1024",
+          "1024x576",
+          "576x1024",
+          "768x768",
+          "768x512",
+          "512x768"
+        ]
+      }
+    },
+    "svd": {
+      "id": "stabilityai/stable-video-diffusion-img2vid-xt",
+      "dtype": "float16",
+      "variant": "fp16",
+      "vram_required_gb": 12,
+      "default_params": {
+        "num_frames": 25,
+        "fps": 7,
+        "motion_bucket_id": 127,
+        "noise_aug_strength": 0.02,
+        "decode_chunk_size": 8,
+        "target_size": [1024, 576]
+      },
+      "limits": {
+        "max_frames": 30,
+        "motion_range": [1, 255]
+      }
+    },
+    "coqui_xtts": {
+      "id": "tts_models/multilingual/multi-dataset/xtts_v2",
+      "vram_required_gb": 3,
+      "profiles": {
+        "masculin":   {"speaker": "Claribel Dervla",   "language": "fr", "speed": 0.9},
+        "feminin":    {"speaker": "Daisy Studious",     "language": "fr", "speed": 1.0},
+        "dramatique": {"speaker": "Viktor Eka",         "language": "fr", "speed": 0.78},
+        "jeune":      {"speaker": "Annmarie Niekamp",   "language": "fr", "speed": 1.05},
+        "epique":     {"speaker": "Andrew Chipper",     "language": "fr", "speed": 0.85}
+      }
+    },
+    "musicgen": {
+      "id": "facebook/musicgen-small",
+      "vram_required_gb": 4,
+      "default_duration_seconds": 10,
+      "max_duration_seconds": 60,
+      "styles": {
+        "cinematique": "epic cinematic orchestral, dramatic strings, powerful brass, Hans Zimmer style",
+        "ambiante":    "peaceful ambient, soft piano, atmospheric pads, calm, Brian Eno style",
+        "cyberpunk":   "dark synthwave, futuristic industrial beats, neon, driving bass",
+        "nature":      "acoustic guitar, birds, gentle rain, folk instrumental, relaxing",
+        "scifi":       "space ambient, ethereal pads, cosmic, futuristic synthesizers",
+        "noir":        "jazz saxophone, trumpet, rainy night, 1940s detective, moody",
+        "fantasy":     "magical orchestral, choir, enchanted forest, mystical harps, epic",
+        "horror":      "dissonant strings, tension, suspense, eerie, terrifying atmosphere",
+        "epic_battle": "powerful timpani, war horns, intense strings, triumphant brass",
+        "romantique":  "romantic violin solo, gentle piano, emotional, tender, love theme"
+      }
+    }
+  },
+
+  "assembly": {
+    "default_volume_voix": 0.9,
+    "default_volume_musique": 0.28,
+    "audio_codec": "aac",
+    "audio_bitrate": "192k",
+    "video_codec": "libx264",
+    "video_preset": "fast",
+    "output_prefix": "BENYJOE_FINAL_"
+  },
+
+  "negative_prompt": "blurry, low quality, bad anatomy, deformed, ugly, duplicate, error, jpeg artifacts, watermark, text, cartoon, flat colors, overexposed, underexposed, noise, grainy",
+
+  "style_suffixes": {
+    "cinematic":   "cinematic lighting, anamorphic lens, film grain, 4K HDR",
+    "cyberpunk":   "neon lights, rain-soaked streets, volumetric fog, 8K",
+    "epic_battle": "fire and smoke, dramatic sky, hyperrealistic, 8K",
+    "nature":      "golden hour, misty mountains, cinematic grade, 4K",
+    "scifi":       "zero gravity, distant nebula, sci-fi tech, cinematic",
+    "noir":        "black and white, smoky atmosphere, dramatic shadows, 1940s",
+    "fantasy":     "magical creatures, bioluminescent, epic fantasy, 8K",
+    "horror":      "fog, moonlight, dark atmosphere, ultra realistic",
+    "romantique":  "warm bokeh, soft light, golden hour, dreamy, 4K"
+  },
+
+  "kaggle": {
+    "gpu_t4_vram_gb": 16,
+    "gpu_count": 2,
+    "weekly_hours": 30,
+    "max_session_hours": 9,
+    "flask_port": 5001,
+    "keep_alive_interval_seconds": 120,
+    "ngrok_free_tier": {
+      "max_tunnels": 1,
+      "bandwidth_gb_per_month": 1,
+      "tunnel_lifetime_hours": 8
+    }
+  },
+
+  "render": {
+    "plan": "free",
+    "timeout_seconds": 420,
+    "sleep_after_inactivity_minutes": 15,
+    "spin_up_seconds": 30,
+    "note": "Le plan gratuit Render s'endort après 15 min d'inactivité. Premier chargement = 30s d'attente."
+  }
+}
