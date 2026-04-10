@@ -541,3 +541,11 @@ if __name__ == "__main__":
     log.info(f"GPU PRIMARY: {get_platforms()['primary'][:70]}")
     log.info("=" * 60)
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
+
+
+@app.route("/api/pending_job", methods=["GET"])
+def api_pending_job():
+    for job_id, status in job_status.items():
+        if status.get("status") == "queued":
+            return jsonify(status)
+    return jsonify({})
