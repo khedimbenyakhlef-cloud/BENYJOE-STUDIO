@@ -70,6 +70,7 @@ NGROK_HEADERS = {
     "ngrok-skip-browser-warning": "true",
     "Content-Type": "application/json",
     "User-Agent": "BenyJoeStudio/7.0",
+    "Accept": "application/json",
 }
 
 # ── Job Queue ─────────────────────────────────────────────────────────────────
