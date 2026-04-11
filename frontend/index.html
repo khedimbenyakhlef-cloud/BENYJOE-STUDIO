@@ -1002,7 +1002,7 @@ function renderResults() {
     const isImage = r.url && r.url.includes('/image/');
     const media = isImage
       ? `<img src="${r.url}" alt="Image" loading="lazy" style="width:100%;aspect-ratio:16/9;object-fit:cover"/>`
-      : `<video src="${r.url}" controls preload="auto" playsinline style="width:100%;aspect-ratio:16/9;background:#000;display:block">
+      : `<video crossorigin="anonymous" src="${r.url}" controls preload="auto" playsinline style="width:100%;aspect-ratio:16/9;background:#000;display:block">
            <source src="${r.url}" type="video/mp4"/>
            Votre navigateur ne supporte pas la lecture vidéo.
          </video>`;
