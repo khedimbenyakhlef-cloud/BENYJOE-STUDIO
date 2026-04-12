@@ -65,7 +65,7 @@ def api_generate():
         "type":           "video",
         "prompt":         prompt,
         "style":          d.get("style","cinematic"),
-        "num_frames":     min(int(d.get("frames", 24)), 40),
+        "num_frames":     min(int(d.get("frames", 80)), 120),
         "width":          int(d.get("width", 512)),
         "height":         int(d.get("height", 512)),
         "steps":          min(int(d.get("steps", 25)), 35),
