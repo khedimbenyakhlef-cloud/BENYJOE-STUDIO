@@ -64,7 +64,7 @@ log = logging.getLogger("BenyJoe")
 # ── Paramètres selon le mode ──────────────────────────────────────────
 if use_gpu:
     dtype = torch.float16
-    DEFAULT_FRAMES, DEFAULT_STEPS, DEFAULT_W, DEFAULT_H, DEFAULT_FPS, CHUNK_SIZE = 24, 25, 512, 512, 8, 8
+    DEFAULT_FRAMES, DEFAULT_STEPS, DEFAULT_W, DEFAULT_H, DEFAULT_FPS, CHUNK_SIZE = 128, 30, 512, 512, 16, 16
 else:
     dtype = torch.float32
     # CPU : frames réduites pour que ça se TERMINE en temps raisonnable
@@ -402,7 +402,7 @@ def api_generate():
 
     touch_activity()
     job_id = _uuid.uuid4().hex[:8]
-    nf     = min(int(d.get("num_frames", DEFAULT_FRAMES)), 40 if use_gpu else 6)
+    nf     = min(int(d.get("num_frames", DEFAULT_FRAMES)), 128 if use_gpu else 6)
     reset_state(total_frames=nf, job_id=job_id)
 
     def _gen():
@@ -411,7 +411,7 @@ def api_generate():
             num_frames=nf,
             width=int(d.get("width", DEFAULT_W)),
             height=int(d.get("height", DEFAULT_H)),
-            steps=min(int(d.get("steps", DEFAULT_STEPS)), 35 if use_gpu else 8),
+            steps=min(int(d.get("steps", DEFAULT_STEPS)), 40 if use_gpu else 8),
             guidance_scale=float(d.get("guidance_scale", 7.5)),
             fps=int(d.get("fps", DEFAULT_FPS)),
             seed=int(d.get("seed", -1)))
