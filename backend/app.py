@@ -111,7 +111,7 @@ def api_generate_image():
         "style":      d.get("style","cinematic"),
         "resolution": d.get("resolution","1024x1024"),
         "steps":      min(int(d.get("steps",30)),50),
-        "guidance_scale": float(d.get("guidance",7.5)),
+        "guidance_scale": float(d.get("guidance",9.0)),
         "seed":       int(d.get("seed",-1)),
         "created_at": datetime.now().isoformat(),
     }
